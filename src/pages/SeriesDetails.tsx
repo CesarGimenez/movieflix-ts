@@ -20,6 +20,8 @@ const SeriesDetails = () => {
   const addToRecentlyViewed = useMovieStore((state) => state.addToRecentlyViewed);
   const isMobile = useIsMobile();
 
+  const { addToWatchlist, watchlist, removeFromWatchlist } = useMovieStore();
+
   // Record this series in recently viewed
   useEffect(() => {
     if (id) {
@@ -52,14 +54,16 @@ const SeriesDetails = () => {
   // Handle loading states
   const isLoading = isLoadingSeries || isLoadingCast;
 
+  const isInWatchlist = watchlist.some((item) => item.id === +id);
+
   // Handle errors
   if (seriesError || castError) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Error loading series details</h1>
-        <p className="mb-6">There was a problem retrieving the series information.</p>
+        <h1 className="text-2xl font-bold mb-4">Error</h1>
+        <p className="mb-6">Ha ocurrido un error al cargar los detalles de la serie.</p>
         <Link to="/series">
-          <Button variant="outline">Back to Series</Button>
+          <Button variant="outline">Volver a series</Button>
         </Link>
       </div>
     );
@@ -67,9 +71,18 @@ const SeriesDetails = () => {
 
   // Handle bookmark click
   const handleBookmarkClick = () => {
+    addToWatchlist(series);
     toast({
-      title: "Added to Watchlist",
-      description: `${series?.title} has been added to your watchlist`,
+      title: "Agregado a la lista de favoritos",
+      description: `${series?.title} ha sido agregado a tu lista de favoritos`,
+    });
+  };
+
+  const handleRemoveFromWatchlist = () => {
+    removeFromWatchlist(+id);
+    toast({
+      title: "Eliminado de la lista de favoritos",
+      description: `${series?.title} ha sido eliminado de tu lista de favoritos`,
     });
   };
 
@@ -80,7 +93,7 @@ const SeriesDetails = () => {
         <Link to="/series">
           <Button variant="ghost" className="flex items-center">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Series
+            Volver a series
           </Button>
         </Link>
       </div>
@@ -160,13 +173,25 @@ const SeriesDetails = () => {
                         </div>
                       </div>
 
-                      <Button
-                        className="bg-movie-accent hover:bg-movie-accent/80 text-white"
-                        onClick={handleBookmarkClick}
-                      >
-                        <Bookmark className="h-4 w-4 mr-2" />
-                        Agregar a mi lista
-                      </Button>
+                      {
+                        isInWatchlist ? (
+                          <Button
+                            className="bg-movie-accent hover:bg-movie-accent/80 text-white"
+                            onClick={handleRemoveFromWatchlist}
+                          >
+                            <Bookmark className="h-4 w-4 mr-2" />
+                            Eliminar de mi lista
+                          </Button>
+                        ) : (
+                          <Button
+                            className="bg-movie-accent hover:bg-movie-accent/80 text-white"
+                            onClick={handleBookmarkClick}
+                          >
+                            <Bookmark className="h-4 w-4 mr-2" />
+                            Agregar a mi lista
+                          </Button>
+                        )
+                      }
                     </div>
                   </div>
                 </div>

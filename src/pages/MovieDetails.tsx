@@ -19,6 +19,7 @@ const MovieDetails = () => {
   const { id } = useParams<{ id: string }>();
   const addToRecentlyViewed = useMovieStore((state) => state.addToRecentlyViewed);
   const isMobile = useIsMobile();
+  const { addToWatchlist, watchlist, removeFromWatchlist } = useMovieStore();
 
   // Record this movie in recently viewed
   useEffect(() => {
@@ -52,14 +53,16 @@ const MovieDetails = () => {
   // Handle loading states
   const isLoading = isLoadingMovie || isLoadingCast;
 
+  const isInWatchlist = watchlist.some(item => item.id === +id);
+
   // Handle errors
   if (movieError || castError) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Error loading movie details</h1>
-        <p className="mb-6">There was a problem retrieving the movie information.</p>
+        <h1 className="text-2xl font-bold mb-4">Error</h1>
+        <p className="mb-6">Ha ocurrido un error al cargar los detalles de la pelicula.</p>
         <Link to="/">
-          <Button variant="outline">Back to Home</Button>
+          <Button variant="outline">Volver a Inicio</Button>
         </Link>
       </div>
     );
@@ -67,9 +70,18 @@ const MovieDetails = () => {
 
   // Handle bookmark click
   const handleBookmarkClick = () => {
+    addToWatchlist(movie);
     toast({
       title: "Agregado a la lista de favoritos",
       description: `${movie?.title} ha sido agregado a tu lista de favoritos`,
+    });
+  };
+
+  const handleDeleteFromWatchlist = () => {
+    removeFromWatchlist(+id);
+    toast({
+      title: "Eliminado de la lista de favoritos",
+      description: `${movie?.title} ha sido eliminado de tu lista de favoritos`,
     });
   };
 
@@ -157,14 +169,26 @@ const MovieDetails = () => {
                           <span>{new Date(movie.release_date).getFullYear()}</span>
                         </div>
                       </div>
-
-                      <Button
-                        className="bg-movie-accent hover:bg-movie-accent/80 text-white"
-                        onClick={handleBookmarkClick}
-                      >
-                        <Bookmark className="h-4 w-4 mr-2" />
-                        Agregar a mi lista
-                      </Button>
+                      
+                      {
+                        isInWatchlist ? (
+                          <Button
+                            className="bg-movie-accent hover:bg-movie-accent/80 text-white"
+                            onClick={handleDeleteFromWatchlist}
+                          >
+                            <Bookmark className="h-4 w-4 mr-2" />
+                            Eliminar de mi lista
+                          </Button>
+                        ) : (
+                          <Button
+                            className="bg-movie-accent hover:bg-movie-accent/80 text-white"
+                            onClick={handleBookmarkClick}
+                          >
+                            <Bookmark className="h-4 w-4 mr-2" />
+                            Agregar a mi lista
+                          </Button>
+                        )
+                      }
                     </div>
                   </div>
                 </div>

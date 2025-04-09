@@ -81,7 +81,7 @@ const Navbar = () => {
                 )
               }
               <Link to="/" className="flex items-center">
-                <span className="font-bebas-neue text-netflix-red text-3xl tracking-wider">
+                <span className="font-bebas-neue font-bold text-netflix-red text-3xl tracking-wider">
                   MOVIEFLIX
                 </span>
               </Link>
