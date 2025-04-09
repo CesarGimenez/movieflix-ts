@@ -14,7 +14,7 @@ const Watchlist = () => {
       {/* Movie listing section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Your Watchlist</h2>
+          <h2 className="text-2xl font-bold">Tu lista de favoritos</h2>
         </div>
 
         {/* Watchlist movies grid */}
@@ -27,13 +27,13 @@ const Watchlist = () => {
         ) : (
           <div className="text-center py-12">
             <BookmarkX className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-            <h3 className="text-xl font-medium mb-2">Your watchlist is empty</h3>
+            <h3 className="text-xl font-medium mb-2">Tu lista de favoritos está vacía</h3>
             <p className="text-gray-500 mb-6">
-              Movies you save to your watchlist will appear here.
+              Las películas que marques como favoritas aparecerán aquí.
             </p>
             <Link to="/">
               <Button className="bg-movie-accent hover:bg-movie-accent/80 text-white">
-                Browse movies
+                Explora películas
               </Button>
             </Link>
           </div>
